@@ -34,7 +34,7 @@ class MyGridLayout(GridLayout):
         #add widget (the top_grid) to the main GridLyout which is the class we are in
         self.add_widget(self.top_grid)
 
-        self.button = Button(text="SignUp", font_size = 32)
+        self.button = Button(text="SignUp", font_size = 33)
         #bind the button
         self.button.bind(on_press =  self.showOnTerminal)
         self.add_widget(self.button)
