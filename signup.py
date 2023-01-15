@@ -4,10 +4,25 @@ from kivy.uix.label import Label
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
+import mysql.connector
 
 class MyGridLayout(GridLayout):
     def __init__(self, **kwargs):
         super(MyGridLayout, self).__init__(**kwargs)
+
+
+        conn = mysql.connector.connect(
+			host = "localhost", 
+			user = "root",
+			passwd = "",
+			database = "signup",
+			)
+        
+        cursor = conn.cursor()
+        # cursor.execute("CREATE DATABASE IF NOT EXISTS signup")
+        cursor.execute("""CREATE TABLE if not exists customers( id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+			fname VARCHAR(50), lname VARCHAR(50), gender VARCHAR(10), email VARCHAR(150))
+		 """)
 
         self.cols = 1
 
@@ -36,20 +51,35 @@ class MyGridLayout(GridLayout):
 
         self.button = Button(text="SignUp", font_size = 33)
         #bind the button
-        self.button.bind(on_press =  self.showOnTerminal)
+        self.button.bind(on_press =  self.submitToDB)
         self.add_widget(self.button)
 
         
 
 
-    def showOnTerminal(self, instance):
+    def submitToDB(self, instance):
+        conn = mysql.connector.connect(
+			host = "localhost", 
+			user = "root",
+			passwd = "",
+			database = "signup",
+			)
+        
+        cursor = conn.cursor()
+        
         gender =    self.gender.text
         email =     self.email.text
         fname =     self.fname.text
         lname =     self.lname.text
         if gender.__len__() > 0 and email.__len__() > 0 and fname.__len__() > 0 and lname.__len__():
-            self.add_widget(Label(text = f"Hello {lname} {fname}, with email address {email}\nYou are a {gender}."))
-        
+            sql = "INSERT INTO customers (fname, lname, gender, email) VALUES (%s, %s, %s, %s)"
+            values = (fname, lname, gender, email)
+            cursor.execute(sql, values)
+            self.add_widget(Label(text = f"Account for {lname} created successfully!"))
+        else:
+            self.add_widget(Label(text = f"All fields must be filled!"))
+
+
 
 class First(App):
     def build(self):
@@ -58,4 +88,3 @@ class First(App):
 
 if __name__ == "__main__":
     First().run()
-
