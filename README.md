@@ -18,5 +18,9 @@ This form is being developed using kivy, with
                 pywin32==305
                 requests==2.28.1
                 urllib3==1.26.13
+               
 
 The above, are installed using "python -m pip install "kivy[base]" kivy_examples"
+
+                 mysql-connector
+installed using "pip install  mysql-connector"
